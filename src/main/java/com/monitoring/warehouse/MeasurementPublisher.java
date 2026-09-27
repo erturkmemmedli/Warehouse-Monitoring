@@ -22,6 +22,7 @@ public class MeasurementPublisher {
                 .serverHost(host)
                 .serverPort(port)
                 .automaticReconnectWithDefaultConfig()
+                .addDisconnectedListener(context -> context.getReconnector().republishIfSessionExpired(true))
                 .buildAsync();
         client.connect().join();
         log.info("Connected to broker {}:{}", host, port);
