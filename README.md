@@ -49,7 +49,7 @@ echo "sensor_id=h1; value=65" | nc -u -w1 127.0.0.1 3355   # ALARM
 echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 ```
 
-# How to Stop
+## How to Stop
 
 1. Stop the apps with Ctrl+C 
 2. Stop the broker with `docker compose down`
