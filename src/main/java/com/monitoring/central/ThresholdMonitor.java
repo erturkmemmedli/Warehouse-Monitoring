@@ -12,25 +12,26 @@ import com.monitoring.common.SensorType;
 public class ThresholdMonitor {
 
     private static final Logger log = LoggerFactory.getLogger(ThresholdMonitor.class);
-    private final Map<SensorType, Double> thresholdMap;
+    private final Map<SensorType, Limits> limitsMap;
 
-    public ThresholdMonitor(Map<SensorType, Double> thresholdData) {
-        this.thresholdMap = new EnumMap<>(thresholdData);
+    public ThresholdMonitor(Map<SensorType, Limits> limitsData) {
+        this.limitsMap = new EnumMap<>(limitsData);
     }
 
     public boolean check(Measurement measurement) {
-        double threshold = thresholdMap.get(measurement.type());
-        if (measurement.value() <= threshold) {
+        Limits limits = limitsMap.get(measurement.type());
+        if (!limits.isOutside(measurement.value())) {
             log.info("OK {}", measurement);
             return false;
         }
         log.warn(
-            "ALARM! {} {} in {} is {} (threshold {})",
-            measurement.type(), 
-            measurement.sensorId(), 
+            "ALARM! {} {} in {} is {} (limits {} to {})",
+            measurement.type(),
+            measurement.sensorId(),
             measurement.warehouseId(),
-            measurement.value(), 
-            threshold
+            measurement.value(),
+            limits.min(),
+            limits.max()
         );
         return true;
     }

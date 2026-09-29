@@ -12,8 +12,8 @@ import com.monitoring.common.SensorType;
 class ThresholdMonitorTest {
 
     private final ThresholdMonitor monitor = new ThresholdMonitor(Map.of(
-        SensorType.TEMPERATURE, 35.0,
-        SensorType.HUMIDITY, 50.0
+        SensorType.TEMPERATURE, new Limits(15.0, 35.0),
+        SensorType.HUMIDITY, new Limits(10.0, 50.0)
     ));
 
     @Test

@@ -9,8 +9,14 @@ public class CentralApp {
 
     public static void main(String[] args) throws InterruptedException {
         ThresholdMonitor monitor = new ThresholdMonitor(Map.of(
-            SensorType.TEMPERATURE, Env.getDouble("TEMPERATURE_THRESHOLD", 35),
-            SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
+            SensorType.TEMPERATURE, new Limits(
+                Env.getDouble("TEMPERATURE_MIN", 10),
+                Env.getDouble("TEMPERATURE_THRESHOLD", 35)
+            ),
+            SensorType.HUMIDITY, new Limits(
+                Env.getDouble("HUMIDITY_MIN", 10),
+                Env.getDouble("HUMIDITY_THRESHOLD", 50)
+            )
         ));
 
         new MeasurementSubscriber(
