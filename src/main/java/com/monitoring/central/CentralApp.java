@@ -8,10 +8,16 @@ import com.monitoring.common.SensorType;
 public class CentralApp {
 
     public static void main(String[] args) throws InterruptedException {
-        ThresholdMonitor monitor = new ThresholdMonitor(Map.of(
-            SensorType.TEMPERATURE, Env.getDouble("TEMPERATURE_THRESHOLD", 35),
-            SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
-        ));
+        ThresholdMonitor monitor = new ThresholdMonitor(
+            Map.of(
+                SensorType.TEMPERATURE, Env.getDouble("TEMPERATURE_THRESHOLD", 35),
+                SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
+            ), 
+            Map.of(
+                SensorType.TEMPERATURE, Env.getDouble("TEMPERATURE_MARGIN", 33),
+                SensorType.HUMIDITY, Env.getDouble("HUMIDITY_MARGIN", 47)
+            )
+        );
 
         new MeasurementSubscriber(
             Env.get("MQTT_HOST", "localhost"), 

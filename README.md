@@ -7,7 +7,7 @@ Defaults given in the requirements:
 - Temperature: UDP port 3344, threshold 35
 - Humidity: UDP port 3355, threshold 50
 
-Used teck stack:
+Used tech stack:
 - Java 21
 - Maven
 - Reactor Netty
@@ -15,7 +15,7 @@ Used teck stack:
 
 ## How to Run
 
-Followings are needed to exist in local:
+You need the following installed:
 - Java 21
 - Maven
 - Docker
@@ -42,9 +42,11 @@ java -cp target/warehouse-monitoring.jar com.monitoring.warehouse.WarehouseApp
 4. Send some readings in another terminal
 
 ```bash
-echo "sensor_id=t1; value=30" | nc -u -w1 127.0.0.1 3344   # OK
+echo "sensor_id=t1; value=30" | nc -u -w1 127.0.0.1 3344   # nothing logged
 echo "sensor_id=t1; value=40" | nc -u -w1 127.0.0.1 3344   # ALARM
-echo "sensor_id=h1; value=45" | nc -u -w1 127.0.0.1 3355   # OK
+echo "sensor_id=t1; value=41" | nc -u -w1 127.0.0.1 3344   # nothing logged, already in alarm
+echo "sensor_id=t1; value=34" | nc -u -w1 127.0.0.1 3344   # nothing logged, still above clear level 33
+echo "sensor_id=t1; value=32" | nc -u -w1 127.0.0.1 3344   # CLEARED
 echo "sensor_id=h1; value=65" | nc -u -w1 127.0.0.1 3355   # ALARM
 echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 ```
@@ -61,9 +63,10 @@ Everything has a default value, so nothing needs to be set.
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
+- `TEMPERATURE_MARGIN`, `HUMIDITY_MARGIN` for the central service: the level an alarm clears at (defaults 33 and 47)
 - `MQTT_HOST`, `MQTT_PORT` for both
 
-For example, in another therminal on the same machine, a second warehouse can be created with following command:
+For example, in another terminal on the same machine, a second warehouse can be created with following command:
 
 ```bash
 WAREHOUSE_ID=warehouse-2 TEMPERATURE_PORT=4344 HUMIDITY_PORT=4355 java -cp target/warehouse-monitoring.jar com.monitoring.warehouse.WarehouseApp
