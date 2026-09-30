@@ -1,6 +1,7 @@
 package com.monitoring.central;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -13,9 +14,11 @@ public class ThresholdMonitor {
 
     private static final Logger log = LoggerFactory.getLogger(ThresholdMonitor.class);
     private final Map<SensorType, Double> thresholdMap;
+    private final List<AlarmNotifier> notifiers;
 
-    public ThresholdMonitor(Map<SensorType, Double> thresholdData) {
+    public ThresholdMonitor(Map<SensorType, Double> thresholdData, List<AlarmNotifier> notifiers) {
         this.thresholdMap = new EnumMap<>(thresholdData);
+        this.notifiers = notifiers;
     }
 
     public boolean check(Measurement measurement) {
@@ -24,14 +27,8 @@ public class ThresholdMonitor {
             log.info("OK {}", measurement);
             return false;
         }
-        log.warn(
-            "ALARM! {} {} in {} is {} (threshold {})",
-            measurement.type(), 
-            measurement.sensorId(), 
-            measurement.warehouseId(),
-            measurement.value(), 
-            threshold
-        );
+        Alarm alarm = new Alarm(measurement, threshold);
+        notifiers.forEach(notifier -> notifier.notify(alarm));
         return true;
     }
 }

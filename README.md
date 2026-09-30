@@ -49,6 +49,14 @@ echo "sensor_id=h1; value=65" | nc -u -w1 127.0.0.1 3355   # ALARM
 echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 ```
 
+Alarms are logged and also published to MQTT on `alarms/warehouse/<warehouseId>/<type>/<sensorId>` with a payload like `{"value":40.0,"threshold":35.0}`, so any other system can subscribe to them:
+
+```bash
+docker compose exec mosquitto mosquitto_sub -t 'alarms/#' -v
+```
+
+To send alarms somewhere else (Slack, email, ...), implement `AlarmNotifier` and add it to the notifier list in `CentralApp`.
+
 ## How to Stop
 
 1. Stop the apps with Ctrl+C 
