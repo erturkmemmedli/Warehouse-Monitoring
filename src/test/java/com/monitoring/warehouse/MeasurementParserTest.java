@@ -22,8 +22,9 @@ class MeasurementParserTest {
         Optional<Measurement> measurement = Optional.of(new Measurement(
             "w1", 
             SensorType.TEMPERATURE, 
-            "t1", 
-            30
+            "t1",
+            30,
+            result.get().measuredAt()
         ));
         assertEquals(measurement, result);
     }
@@ -38,8 +39,9 @@ class MeasurementParserTest {
         Optional<Measurement> measurement = Optional.of(new Measurement(
             "w1",
             SensorType.HUMIDITY, 
-            "h1", 
-            -2.5
+            "h1",
+            -2.5,
+            result.get().measuredAt()
         ));
         assertEquals(measurement, result);
     }

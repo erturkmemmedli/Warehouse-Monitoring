@@ -25,12 +25,13 @@ public class ThresholdMonitor {
             return false;
         }
         log.warn(
-            "ALARM! {} {} in {} is {} (threshold {})",
-            measurement.type(), 
-            measurement.sensorId(), 
+            "ALARM! {} {} in {} is {} (threshold {}) at {}",
+            measurement.type(),
+            measurement.sensorId(),
             measurement.warehouseId(),
-            measurement.value(), 
-            threshold
+            measurement.value(),
+            threshold,
+            measurement.measuredAt()
         );
         return true;
     }

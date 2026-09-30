@@ -31,7 +31,7 @@ public class MeasurementPublisher {
     public void publish(Measurement measurement) {
         client.publishWith()
                 .topic(measurement.topic())
-                .payload(String.valueOf(measurement.value()).getBytes(StandardCharsets.UTF_8))
+                .payload(measurement.payload().getBytes(StandardCharsets.UTF_8))
                 .qos(MqttQos.AT_LEAST_ONCE)
                 .send()
                 .whenComplete((result, error) -> {

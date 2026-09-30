@@ -41,8 +41,9 @@ class UdpSensorListenerTest {
         Measurement createdMeasurement = new Measurement(
             "w1", 
             SensorType.TEMPERATURE, 
-            "t1", 
-            36
+            "t1",
+            36,
+            experimentedMeasurement.measuredAt()
         );
         assertEquals(createdMeasurement, experimentedMeasurement);
         assertEquals(0, received.size());

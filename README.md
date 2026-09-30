@@ -3,6 +3,8 @@
 The warehouse service receives temperature and humidity readings over UDP and publishes them to an MQTT broker (Mosquitto).
 The central service reads them from the broker and logs an alarm when a value is above the threshold.
 
+Each reading is stamped with the time it was measured in the warehouse and sent as JSON, for example `{"value":40.0,"measuredAt":"2026-01-01T10:00:00Z"}`, so alarms show the measured time even for messages replayed later.
+
 Defaults given in the requirements:
 - Temperature: UDP port 3344, threshold 35
 - Humidity: UDP port 3355, threshold 50
