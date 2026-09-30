@@ -61,7 +61,14 @@ Everything has a default value, so nothing needs to be set.
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
+- `<WAREHOUSE_ID>_TEMPERATURE_THRESHOLD`, `<WAREHOUSE_ID>_HUMIDITY_THRESHOLD` for the central service, to override a threshold for one warehouse (warehouse id uppercased, `-` replaced with `_`)
 - `MQTT_HOST`, `MQTT_PORT` for both
+
+The warehouse override is used first, then the type default. For example, warehouse 2 stores electronics and needs humidity below 40:
+
+```bash
+WAREHOUSE_2_HUMIDITY_THRESHOLD=40 java -cp target/warehouse-monitoring.jar com.monitoring.central.CentralApp
+```
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
 

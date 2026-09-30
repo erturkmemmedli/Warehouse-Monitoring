@@ -14,7 +14,7 @@ class ThresholdMonitorTest {
     private final ThresholdMonitor monitor = new ThresholdMonitor(Map.of(
         SensorType.TEMPERATURE, 35.0,
         SensorType.HUMIDITY, 50.0
-    ));
+    ), Map.of("WAREHOUSE_2_HUMIDITY_THRESHOLD", "40")::get);
 
     @Test
     void alarmsOnHighTemperature() {
@@ -53,6 +53,26 @@ class ThresholdMonitorTest {
             SensorType.HUMIDITY, 
             "h1", 
             40
+        )));
+    }
+
+    @Test
+    void usesWarehouseOverride() {
+        assertTrue(monitor.check(new Measurement(
+            "warehouse-2",
+            SensorType.HUMIDITY,
+            "h1",
+            45
+        )));
+    }
+
+    @Test
+    void fallsBackToTypeDefault() {
+        assertFalse(monitor.check(new Measurement(
+            "warehouse-1",
+            SensorType.HUMIDITY,
+            "h1",
+            45
         )));
     }
 }

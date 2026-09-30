@@ -11,7 +11,7 @@ public class CentralApp {
         ThresholdMonitor monitor = new ThresholdMonitor(Map.of(
             SensorType.TEMPERATURE, Env.getDouble("TEMPERATURE_THRESHOLD", 35),
             SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
-        ));
+        ), name -> Env.get(name, null));
 
         new MeasurementSubscriber(
             Env.get("MQTT_HOST", "localhost"), 
