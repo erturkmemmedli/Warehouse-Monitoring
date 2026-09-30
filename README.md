@@ -61,6 +61,7 @@ Everything has a default value, so nothing needs to be set.
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
+- `SENSOR_TIMEOUT_SECONDS` for the central service, a sensor that sends nothing for this long is logged as silent (default 60)
 - `MQTT_HOST`, `MQTT_PORT` for both
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
