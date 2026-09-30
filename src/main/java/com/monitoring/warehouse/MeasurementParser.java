@@ -22,6 +22,10 @@ public final class MeasurementParser {
         }
         double value = Double.parseDouble(matcher.group(2));
         String sensorId = matcher.group(1);
-        return Optional.of(new Measurement(warehouseId, type, sensorId, value));
+        try {
+            return Optional.of(new Measurement(warehouseId, type, sensorId, value));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 }

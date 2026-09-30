@@ -47,6 +47,7 @@ echo "sensor_id=t1; value=40" | nc -u -w1 127.0.0.1 3344   # ALARM
 echo "sensor_id=h1; value=45" | nc -u -w1 127.0.0.1 3355   # OK
 echo "sensor_id=h1; value=65" | nc -u -w1 127.0.0.1 3355   # ALARM
 echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
+echo "sensor_id=h1; value=250" | nc -u -w1 127.0.0.1 3355  # Warning -> Skipped, humidity must be 0 to 100
 ```
 
 ## How to Stop

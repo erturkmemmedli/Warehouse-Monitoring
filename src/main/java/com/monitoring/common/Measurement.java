@@ -2,6 +2,12 @@ package com.monitoring.common;
 
 public record Measurement(String warehouseId, SensorType type, String sensorId, double value) {
 
+    public Measurement {
+        if (type == SensorType.HUMIDITY && (value < 0 || value > 100)) {
+            throw new IllegalArgumentException("Humidity out of range: " + value);
+        }
+    }
+
     public String topic() {
         return "warehouse/%s/%s/%s".formatted(
             warehouseId, 

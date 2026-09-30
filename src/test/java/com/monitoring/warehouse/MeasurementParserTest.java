@@ -31,17 +31,30 @@ class MeasurementParserTest {
     @Test
     void parsesDecimalMessage() {
         Optional<Measurement> result = MeasurementParser.parse(
-            "sensor_id=h1; value=-2.5\n", 
-            "w1", 
-            SensorType.HUMIDITY
+            "sensor_id=t1; value=-2.5\n",
+            "w1",
+            SensorType.TEMPERATURE
         );
         Optional<Measurement> measurement = Optional.of(new Measurement(
             "w1",
-            SensorType.HUMIDITY, 
-            "h1", 
+            SensorType.TEMPERATURE,
+            "t1",
             -2.5
         ));
         assertEquals(measurement, result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "sensor_id=h1; value=-1",
+        "sensor_id=h1; value=250"
+    })
+    void rejectsImplausibleHumidity(String raw) {
+        assertTrue(MeasurementParser.parse(
+            raw,
+            "w1",
+            SensorType.HUMIDITY
+        ).isEmpty());
     }
 
     @ParameterizedTest
