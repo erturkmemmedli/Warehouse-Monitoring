@@ -2,12 +2,16 @@ package com.monitoring.central;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.monitoring.common.Measurement;
 import com.monitoring.common.SensorType;
+
+import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 
 class ThresholdMonitorTest {
 
@@ -54,5 +58,22 @@ class ThresholdMonitorTest {
             "h1", 
             40
         )));
+    }
+
+    @Test
+    void countsAlarms() {
+        SimpleMeterRegistry registry = new SimpleMeterRegistry();
+        Metrics.addRegistry(registry);
+        try {
+            monitor.check(new Measurement(
+                "w1",
+                SensorType.TEMPERATURE,
+                "t1",
+                40
+            ));
+            assertEquals(1, registry.counter("alarms.raised", "type", "TEMPERATURE").count());
+        } finally {
+            Metrics.removeRegistry(registry);
+        }
     }
 }

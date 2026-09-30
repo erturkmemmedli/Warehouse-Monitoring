@@ -1,19 +1,24 @@
 package com.monitoring.warehouse;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.monitoring.common.Env;
+import com.monitoring.common.MetricsServer;
 import com.monitoring.common.SensorType;
 
 public class WarehouseApp {
 
     private static final Logger log = LoggerFactory.getLogger(WarehouseApp.class);
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         String warehouseId = Env.get("WAREHOUSE_ID", "warehouse-1");
         int temperaturePort = Env.getInt("TEMPERATURE_PORT", 3344);
         int humidityPort = Env.getInt("HUMIDITY_PORT", 3355);
+
+        MetricsServer.start(Env.getInt("METRICS_PORT", 9101));
 
         MeasurementPublisher publisher = new MeasurementPublisher(
             Env.get("MQTT_HOST", "localhost"), 

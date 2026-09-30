@@ -62,6 +62,14 @@ To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
 - `MQTT_HOST`, `MQTT_PORT` for both
+- `METRICS_PORT` for both, HTTP port of the Prometheus metrics (default 9101 for the warehouse, 9100 for the central service)
+
+Both services expose counters for Prometheus: received, invalid, published and failed messages in the warehouse, raised alarms in the central service:
+
+```bash
+curl http://localhost:9101/metrics
+curl http://localhost:9100/metrics
+```
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
 

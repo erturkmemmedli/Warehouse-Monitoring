@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.monitoring.common.Measurement;
 import com.monitoring.common.SensorType;
 
+import io.micrometer.core.instrument.Metrics;
 import reactor.netty.Connection;
 import reactor.netty.udp.UdpServer;
 
@@ -35,9 +36,13 @@ public class UdpSensorListener {
     }
 
     private void onMessage(String raw, SensorType type) {
+        Metrics.counter("sensor.messages.received", "type", type.name()).increment();
         MeasurementParser.parse(raw, warehouseId, type).ifPresentOrElse(
             destination,
-            () -> log.warn("Invalid {} message: {}", type, raw.trim())
+            () -> {
+                Metrics.counter("sensor.messages.invalid", "type", type.name()).increment();
+                log.warn("Invalid {} message: {}", type, raw.trim());
+            }
         );
     }
 }

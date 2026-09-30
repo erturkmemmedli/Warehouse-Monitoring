@@ -10,6 +10,8 @@ import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 import com.monitoring.common.Measurement;
 
+import io.micrometer.core.instrument.Metrics;
+
 public class MeasurementPublisher {
 
     private static final Logger log = LoggerFactory.getLogger(MeasurementPublisher.class);
@@ -36,8 +38,10 @@ public class MeasurementPublisher {
                 .send()
                 .whenComplete((result, error) -> {
                     if (error != null) {
+                        Metrics.counter("mqtt.publish.failed").increment();
                         log.error("Failed to publish {}", measurement, error);
                     } else {
+                        Metrics.counter("mqtt.publish.succeeded").increment();
                         log.info("Published {}", measurement);
                     }
                 });

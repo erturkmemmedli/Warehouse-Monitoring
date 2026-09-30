@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import com.monitoring.common.Measurement;
 import com.monitoring.common.SensorType;
 
+import io.micrometer.core.instrument.Metrics;
+
 public class ThresholdMonitor {
 
     private static final Logger log = LoggerFactory.getLogger(ThresholdMonitor.class);
@@ -32,6 +34,7 @@ public class ThresholdMonitor {
             measurement.value(), 
             threshold
         );
+        Metrics.counter("alarms.raised", "type", measurement.type().name()).increment();
         return true;
     }
 }

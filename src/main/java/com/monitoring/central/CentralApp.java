@@ -1,13 +1,17 @@
 package com.monitoring.central;
 
+import java.io.IOException;
 import java.util.Map;
 
 import com.monitoring.common.Env;
+import com.monitoring.common.MetricsServer;
 import com.monitoring.common.SensorType;
 
 public class CentralApp {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
+        MetricsServer.start(Env.getInt("METRICS_PORT", 9100));
+
         ThresholdMonitor monitor = new ThresholdMonitor(Map.of(
             SensorType.TEMPERATURE, Env.getDouble("TEMPERATURE_THRESHOLD", 35),
             SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
