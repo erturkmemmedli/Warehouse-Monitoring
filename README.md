@@ -54,6 +54,8 @@ echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 1. Stop the apps with Ctrl+C 
 2. Stop the broker with `docker compose down`
 
+On Ctrl+C (or a container stop) the warehouse first closes its UDP ports so no new readings arrive, then both services disconnect from the broker cleanly.
+
 ## Settings
 
 Everything has a default value, so nothing needs to be set.

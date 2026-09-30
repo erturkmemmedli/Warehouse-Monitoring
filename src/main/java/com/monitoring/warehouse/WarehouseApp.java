@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.monitoring.common.Env;
 import com.monitoring.common.SensorType;
 
+import reactor.netty.Connection;
+
 public class WarehouseApp {
 
     private static final Logger log = LoggerFactory.getLogger(WarehouseApp.class);
@@ -23,8 +25,15 @@ public class WarehouseApp {
 
         UdpSensorListener listener = new UdpSensorListener(warehouseId, publisher::publish);
 
-        listener.listen(temperaturePort, SensorType.TEMPERATURE);
-        listener.listen(humidityPort, SensorType.HUMIDITY);
+        Connection temperature = listener.listen(temperaturePort, SensorType.TEMPERATURE);
+        Connection humidity = listener.listen(humidityPort, SensorType.HUMIDITY);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("Shutting down warehouse {}", warehouseId);
+            temperature.disposeNow();
+            humidity.disposeNow();
+            publisher.close();
+        }));
 
         log.info(
             "Warehouse {} listening on UDP {} and {}", 

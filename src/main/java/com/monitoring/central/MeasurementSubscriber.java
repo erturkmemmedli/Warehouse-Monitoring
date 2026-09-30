@@ -42,6 +42,11 @@ public class MeasurementSubscriber {
         log.info("Subscribed to {}", TOPIC_FILTER);
     }
 
+    public void close() {
+        client.disconnect().join();
+        log.info("Disconnected from broker");
+    }
+
     private void onMessage(Mqtt5Publish publish) {
         String topic = publish.getTopic().toString();
         String payload = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);

@@ -13,11 +13,14 @@ public class CentralApp {
             SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
         ));
 
-        new MeasurementSubscriber(
-            Env.get("MQTT_HOST", "localhost"), 
-            Env.getInt("MQTT_PORT", 1883), 
+        MeasurementSubscriber subscriber = new MeasurementSubscriber(
+            Env.get("MQTT_HOST", "localhost"),
+            Env.getInt("MQTT_PORT", 1883),
             monitor::check
-        ).start();
+        );
+        subscriber.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(subscriber::close));
 
         Thread.currentThread().join();
     }

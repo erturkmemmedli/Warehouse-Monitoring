@@ -42,4 +42,9 @@ public class MeasurementPublisher {
                     }
                 });
     }
+
+    public void close() {
+        client.disconnect().join();
+        log.info("Disconnected from broker");
+    }
 }
