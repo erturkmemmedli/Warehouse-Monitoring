@@ -61,6 +61,7 @@ Everything has a default value, so nothing needs to be set.
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
+- `HISTORY_FILE` for the central service, every received measurement is appended to this CSV file as `receivedAt,warehouse,type,sensor,value` (default `history.csv`)
 - `MQTT_HOST`, `MQTT_PORT` for both
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
