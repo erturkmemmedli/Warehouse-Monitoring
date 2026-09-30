@@ -61,7 +61,14 @@ Everything has a default value, so nothing needs to be set.
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
+- `STATUS_PORT` for the central service, HTTP port of the status API (default 8080)
 - `MQTT_HOST`, `MQTT_PORT` for both
+
+The central service shows the latest value of every sensor over HTTP:
+
+```bash
+curl http://localhost:8080/sensors
+```
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
 
