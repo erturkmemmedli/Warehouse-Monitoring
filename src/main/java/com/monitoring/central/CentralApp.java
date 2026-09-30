@@ -1,5 +1,6 @@
 package com.monitoring.central;
 
+import java.time.Duration;
 import java.util.Map;
 
 import com.monitoring.common.Env;
@@ -13,10 +14,15 @@ public class CentralApp {
             SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
         ));
 
-        new MeasurementSubscriber(
-            Env.get("MQTT_HOST", "localhost"), 
-            Env.getInt("MQTT_PORT", 1883), 
+        MeasurementAverager averager = new MeasurementAverager(
+            Duration.ofSeconds(Env.getInt("AVERAGE_WINDOW_SECONDS", 60)),
             monitor::check
+        );
+
+        new MeasurementSubscriber(
+            Env.get("MQTT_HOST", "localhost"),
+            Env.getInt("MQTT_PORT", 1883),
+            averager::accept
         ).start();
 
         Thread.currentThread().join();

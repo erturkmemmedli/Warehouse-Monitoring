@@ -49,6 +49,8 @@ echo "sensor_id=h1; value=65" | nc -u -w1 127.0.0.1 3355   # ALARM
 echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 ```
 
+The central service checks the average of each sensor once per window (60 seconds by default), so a single spike does not alarm.
+
 ## How to Stop
 
 1. Stop the apps with Ctrl+C 
@@ -61,6 +63,7 @@ Everything has a default value, so nothing needs to be set.
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
+- `AVERAGE_WINDOW_SECONDS` for the central service, readings of each sensor are averaged over this window and only the average is checked (default 60)
 - `MQTT_HOST`, `MQTT_PORT` for both
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
