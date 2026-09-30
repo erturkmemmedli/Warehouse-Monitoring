@@ -20,13 +20,17 @@ public class MeasurementSubscriber {
     private final Mqtt5AsyncClient client;
     private final Consumer<Measurement> handler;
 
-    public MeasurementSubscriber(String host, int port, Consumer<Measurement> handler) {
+    public MeasurementSubscriber(String host, int port, String username, String password, Consumer<Measurement> handler) {
         this.handler = handler;
         this.client = MqttClient.builder()
                 .useMqttVersion5()
                 .identifier("central-service")
                 .serverHost(host)
                 .serverPort(port)
+                .simpleAuth()
+                    .username(username)
+                    .password(password.getBytes(StandardCharsets.UTF_8))
+                    .applySimpleAuth()
                 .automaticReconnectWithDefaultConfig()
                 .buildAsync();
     }

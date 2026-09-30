@@ -62,6 +62,11 @@ To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
 - `MQTT_HOST`, `MQTT_PORT` for both
+- `MQTT_USER`, `MQTT_PASSWORD` for both (default: the warehouse id for a warehouse, `central` for the central service)
+
+The broker does not allow anonymous clients. `docker-compose.yml` creates the demo users `central`, `warehouse-1` and `warehouse-2`, each with its name as password.
+The ACL in `mosquitto/acl` lets the central service read `warehouse/#`, and each warehouse write only to `warehouse/<its username>/#`.
+For production, use real passwords and add TLS (`listener 8883` with `cafile`, `certfile`, `keyfile`, and `.sslWithDefaultConfig()` on the clients).
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
 

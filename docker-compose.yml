@@ -5,3 +5,10 @@ services:
       - "1883:1883"
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/acl:/mosquitto/config/acl
+    command: >
+      sh -c "mosquitto_passwd -c -b /mosquitto/config/passwords central central &&
+             mosquitto_passwd -b /mosquitto/config/passwords warehouse-1 warehouse-1 &&
+             mosquitto_passwd -b /mosquitto/config/passwords warehouse-2 warehouse-2 &&
+             chown mosquitto:mosquitto /mosquitto/config/passwords &&
+             exec mosquitto -c /mosquitto/config/mosquitto.conf"

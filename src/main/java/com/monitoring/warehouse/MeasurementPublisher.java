@@ -15,12 +15,16 @@ public class MeasurementPublisher {
     private static final Logger log = LoggerFactory.getLogger(MeasurementPublisher.class);
     private final Mqtt5AsyncClient client;
 
-    public MeasurementPublisher(String host, int port, String clientId) {
+    public MeasurementPublisher(String host, int port, String clientId, String username, String password) {
         client = MqttClient.builder()
                 .useMqttVersion5()
                 .identifier(clientId)
                 .serverHost(host)
                 .serverPort(port)
+                .simpleAuth()
+                    .username(username)
+                    .password(password.getBytes(StandardCharsets.UTF_8))
+                    .applySimpleAuth()
                 .automaticReconnectWithDefaultConfig()
                 .addDisconnectedListener(context -> context.getReconnector().republishIfSessionExpired(true))
                 .buildAsync();

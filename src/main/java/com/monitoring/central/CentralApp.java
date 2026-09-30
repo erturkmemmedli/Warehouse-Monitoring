@@ -15,7 +15,9 @@ public class CentralApp {
 
         new MeasurementSubscriber(
             Env.get("MQTT_HOST", "localhost"), 
-            Env.getInt("MQTT_PORT", 1883), 
+            Env.getInt("MQTT_PORT", 1883),
+            Env.get("MQTT_USER", "central"),
+            Env.get("MQTT_PASSWORD", "central"),
             monitor::check
         ).start();
 

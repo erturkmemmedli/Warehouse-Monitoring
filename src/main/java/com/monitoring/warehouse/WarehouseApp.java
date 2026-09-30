@@ -17,8 +17,10 @@ public class WarehouseApp {
 
         MeasurementPublisher publisher = new MeasurementPublisher(
             Env.get("MQTT_HOST", "localhost"), 
-            Env.getInt("MQTT_PORT", 1883), 
-            warehouseId
+            Env.getInt("MQTT_PORT", 1883),
+            warehouseId,
+            Env.get("MQTT_USER", warehouseId),
+            Env.get("MQTT_PASSWORD", warehouseId)
         );
 
         UdpSensorListener listener = new UdpSensorListener(warehouseId, publisher::publish);

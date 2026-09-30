@@ -1,0 +1,6 @@
+# central reads every warehouse
+user central
+topic read warehouse/#
+
+# each warehouse may write only its own branch, %u is the username
+pattern write warehouse/%u/#
