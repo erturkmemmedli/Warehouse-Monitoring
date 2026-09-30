@@ -55,4 +55,15 @@ class ThresholdMonitorTest {
             40
         )));
     }
+
+    @Test
+    void usesUpdatedThreshold() {
+        monitor.update(SensorType.HUMIDITY, 30);
+        assertTrue(monitor.check(new Measurement(
+            "w1",
+            SensorType.HUMIDITY,
+            "h1",
+            40
+        )));
+    }
 }

@@ -1,7 +1,7 @@
 package com.monitoring.central;
 
-import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,12 @@ public class ThresholdMonitor {
     private final Map<SensorType, Double> thresholdMap;
 
     public ThresholdMonitor(Map<SensorType, Double> thresholdData) {
-        this.thresholdMap = new EnumMap<>(thresholdData);
+        this.thresholdMap = new ConcurrentHashMap<>(thresholdData);
+    }
+
+    public void update(SensorType type, double threshold) {
+        thresholdMap.put(type, threshold);
+        log.info("Threshold for {} set to {}", type, threshold);
     }
 
     public boolean check(Measurement measurement) {

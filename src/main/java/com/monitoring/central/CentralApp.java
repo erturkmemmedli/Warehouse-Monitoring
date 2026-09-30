@@ -16,7 +16,8 @@ public class CentralApp {
         new MeasurementSubscriber(
             Env.get("MQTT_HOST", "localhost"), 
             Env.getInt("MQTT_PORT", 1883), 
-            monitor::check
+            monitor::check,
+            monitor::update
         ).start();
 
         Thread.currentThread().join();

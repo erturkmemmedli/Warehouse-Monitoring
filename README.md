@@ -63,6 +63,14 @@ To change something, set an environment variable:
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
 - `MQTT_HOST`, `MQTT_PORT` for both
 
+Thresholds can also be changed while the central service runs, by publishing a retained message to `config/threshold/<type>`:
+
+```bash
+docker compose exec mosquitto mosquitto_pub -t config/threshold/temperature -m 30 -r
+```
+
+Retained means the broker keeps the latest value, so the central service gets it again every time it connects.
+
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
 
 ```bash
