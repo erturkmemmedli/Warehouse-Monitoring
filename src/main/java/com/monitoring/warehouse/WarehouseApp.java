@@ -12,8 +12,6 @@ public class WarehouseApp {
 
     public static void main(String[] args) throws InterruptedException {
         String warehouseId = Env.get("WAREHOUSE_ID", "warehouse-1");
-        int temperaturePort = Env.getInt("TEMPERATURE_PORT", 3344);
-        int humidityPort = Env.getInt("HUMIDITY_PORT", 3355);
 
         MeasurementPublisher publisher = new MeasurementPublisher(
             Env.get("MQTT_HOST", "localhost"), 
@@ -23,13 +21,10 @@ public class WarehouseApp {
 
         UdpSensorListener listener = new UdpSensorListener(warehouseId, publisher::publish);
 
-        listener.listen(temperaturePort, SensorType.TEMPERATURE);
-        listener.listen(humidityPort, SensorType.HUMIDITY);
-
-        log.info(
-            "Warehouse {} listening on UDP {} and {}", 
-            warehouseId, temperaturePort, humidityPort
-        );
+        for (SensorType type : SensorType.values()) {
+            listener.listen(type.port(), type);
+            log.info("Warehouse {} listening for {} on UDP {}", warehouseId, type, type.port());
+        }
 
         Thread.currentThread().join();
     }

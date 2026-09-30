@@ -29,6 +29,18 @@ class MeasurementTest {
     }
 
     @Test
+    void restoresCo2FromMqtt() {
+        Measurement original = new Measurement(
+            "w1",
+            SensorType.CO2,
+            "c1",
+            1200
+        );
+        assertEquals("warehouse/w1/co2/c1", original.topic());
+        assertEquals(original, Measurement.fromMqtt(original.topic(), "1200.0"));
+    }
+
+    @Test
     void rejectsBadTopic() {
         assertThrows(
             IllegalArgumentException.class, 

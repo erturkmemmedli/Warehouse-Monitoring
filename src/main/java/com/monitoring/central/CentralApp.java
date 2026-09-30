@@ -1,5 +1,6 @@
 package com.monitoring.central;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 import com.monitoring.common.Env;
@@ -8,10 +9,12 @@ import com.monitoring.common.SensorType;
 public class CentralApp {
 
     public static void main(String[] args) throws InterruptedException {
-        ThresholdMonitor monitor = new ThresholdMonitor(Map.of(
-            SensorType.TEMPERATURE, Env.getDouble("TEMPERATURE_THRESHOLD", 35),
-            SensorType.HUMIDITY, Env.getDouble("HUMIDITY_THRESHOLD", 50)
-        ));
+        Map<SensorType, Double> thresholds = new EnumMap<>(SensorType.class);
+        for (SensorType type : SensorType.values()) {
+            thresholds.put(type, type.threshold());
+        }
+
+        ThresholdMonitor monitor = new ThresholdMonitor(thresholds);
 
         new MeasurementSubscriber(
             Env.get("MQTT_HOST", "localhost"), 
