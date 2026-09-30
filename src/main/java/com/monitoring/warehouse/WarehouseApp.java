@@ -1,5 +1,9 @@
 package com.monitoring.warehouse;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +25,12 @@ public class WarehouseApp {
             warehouseId
         );
 
-        UdpSensorListener listener = new UdpSensorListener(warehouseId, publisher::publish);
+        Set<String> allowedHosts = Arrays.stream(Env.get("ALLOWED_HOSTS", "").split(","))
+            .map(String::trim)
+            .filter(host -> !host.isEmpty())
+            .collect(Collectors.toSet());
+
+        UdpSensorListener listener = new UdpSensorListener(warehouseId, allowedHosts, publisher::publish);
 
         listener.listen(temperaturePort, SensorType.TEMPERATURE);
         listener.listen(humidityPort, SensorType.HUMIDITY);

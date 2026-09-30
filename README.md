@@ -60,6 +60,7 @@ Everything has a default value, so nothing needs to be set.
 
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
+- `ALLOWED_HOSTS` for the warehouse service, comma separated sensor IP addresses; datagrams from other hosts are ignored (default empty, all hosts allowed)
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
 - `MQTT_HOST`, `MQTT_PORT` for both
 

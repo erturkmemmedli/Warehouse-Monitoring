@@ -4,12 +4,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 
 import com.monitoring.common.Measurement;
@@ -22,6 +24,7 @@ class UdpSensorListenerTest {
     private final BlockingQueue<Measurement> received = new LinkedBlockingQueue<>();
     private final Connection connection = new UdpSensorListener(
         "w1",
+        Set.of(),
         received::add
     ).listen(0, SensorType.TEMPERATURE);
 
@@ -48,9 +51,28 @@ class UdpSensorListenerTest {
         assertEquals(0, received.size());
     }
 
+    @Test
+    void ignoresUntrustedHosts() throws Exception {
+        Connection trustedOnly = new UdpSensorListener(
+            "w1",
+            Set.of("10.0.0.1"),
+            received::add
+        ).listen(0, SensorType.TEMPERATURE);
+        try {
+            send("sensor_id=t1; value=36", trustedOnly);
+            assertNull(received.poll(1, TimeUnit.SECONDS));
+        } finally {
+            trustedOnly.disposeNow();
+        }
+    }
+
     private void send(String message) throws Exception {
+        send(message, connection);
+    }
+
+    private void send(String message, Connection target) throws Exception {
         byte[] data = message.getBytes(StandardCharsets.UTF_8);
-        InetSocketAddress address = (InetSocketAddress) connection.address();
+        InetSocketAddress address = (InetSocketAddress) target.address();
         try (DatagramSocket socket = new DatagramSocket()) {
             socket.send(new DatagramPacket(
                 data, 
