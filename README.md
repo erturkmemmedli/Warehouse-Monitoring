@@ -74,3 +74,5 @@ WAREHOUSE_ID=warehouse-2 TEMPERATURE_PORT=4344 HUMIDITY_PORT=4355 java -cp targe
 ```bash
 mvn test
 ```
+
+`EndToEndTest` starts a real Mosquitto in Docker with Testcontainers and checks that a published measurement reaches the central subscriber. It is skipped when Docker is not running.
