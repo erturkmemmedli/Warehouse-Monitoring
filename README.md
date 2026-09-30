@@ -54,6 +54,17 @@ echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 1. Stop the apps with Ctrl+C 
 2. Stop the broker with `docker compose down`
 
+## Run Everything in Docker
+
+The broker, the central service and one warehouse can also start with one command, without Java or Maven installed locally:
+
+```bash
+docker compose --profile apps up -d --build
+docker compose logs -f central
+```
+
+The warehouse UDP ports 3344 and 3355 are published, so the `nc` commands above work the same way. Stop everything with `docker compose --profile apps down`.
+
 ## Settings
 
 Everything has a default value, so nothing needs to be set.

@@ -5,3 +5,25 @@ services:
       - "1883:1883"
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  central:
+    build: .
+    profiles: [apps]
+    command: com.monitoring.central.CentralApp
+    environment:
+      MQTT_HOST: mosquitto
+    depends_on: [mosquitto]
+    restart: on-failure
+
+  warehouse-1:
+    build: .
+    profiles: [apps]
+    command: com.monitoring.warehouse.WarehouseApp
+    environment:
+      MQTT_HOST: mosquitto
+      WAREHOUSE_ID: warehouse-1
+    ports:
+      - "3344:3344/udp"
+      - "3355:3355/udp"
+    depends_on: [mosquitto]
+    restart: on-failure
