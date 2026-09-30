@@ -61,7 +61,14 @@ Everything has a default value, so nothing needs to be set.
 To change something, set an environment variable:
 - `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
+- `CENTRAL_ID` for the central service, its MQTT client id, which must be unique per instance (default `central-service`)
 - `MQTT_HOST`, `MQTT_PORT` for both
+
+The central service uses an MQTT shared subscription (`$share/central/...`), so several instances split the messages between them. To add a second instance:
+
+```bash
+CENTRAL_ID=central-2 java -cp target/warehouse-monitoring.jar com.monitoring.central.CentralApp
+```
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
 

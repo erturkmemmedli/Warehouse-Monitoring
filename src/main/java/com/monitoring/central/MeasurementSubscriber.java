@@ -16,15 +16,15 @@ import com.monitoring.common.Measurement;
 public class MeasurementSubscriber {
 
     private static final Logger log = LoggerFactory.getLogger(MeasurementSubscriber.class);
-    private static final String TOPIC_FILTER = "warehouse/+/+/+";
+    private static final String TOPIC_FILTER = "$share/central/warehouse/+/+/+";
     private final Mqtt5AsyncClient client;
     private final Consumer<Measurement> handler;
 
-    public MeasurementSubscriber(String host, int port, Consumer<Measurement> handler) {
+    public MeasurementSubscriber(String host, int port, String clientId, Consumer<Measurement> handler) {
         this.handler = handler;
         this.client = MqttClient.builder()
                 .useMqttVersion5()
-                .identifier("central-service")
+                .identifier(clientId)
                 .serverHost(host)
                 .serverPort(port)
                 .automaticReconnectWithDefaultConfig()
