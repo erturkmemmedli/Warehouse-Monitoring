@@ -1,11 +1,12 @@
 # Warehouse Monitoring
 
-The warehouse service receives temperature and humidity readings over UDP and publishes them to an MQTT broker (Mosquitto).
+The warehouse service receives temperature, humidity and location readings over UDP and publishes them to an MQTT broker (Mosquitto).
 The central service reads them from the broker and logs an alarm when a value is above the threshold.
 
 Defaults given in the requirements:
 - Temperature: UDP port 3344, threshold 35
 - Humidity: UDP port 3355, threshold 50
+- Location: UDP port 3366, no threshold (readings are logged), format `sensor_id=l1; latitude=40.4093; longitude=49.8671`
 
 Used teck stack:
 - Java 21
@@ -46,6 +47,7 @@ echo "sensor_id=t1; value=30" | nc -u -w1 127.0.0.1 3344   # OK
 echo "sensor_id=t1; value=40" | nc -u -w1 127.0.0.1 3344   # ALARM
 echo "sensor_id=h1; value=45" | nc -u -w1 127.0.0.1 3355   # OK
 echo "sensor_id=h1; value=65" | nc -u -w1 127.0.0.1 3355   # ALARM
+echo "sensor_id=l1; latitude=40.4093; longitude=49.8671" | nc -u -w1 127.0.0.1 3366   # OK
 echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 ```
 
@@ -59,14 +61,14 @@ echo "hello" | nc -u -w1 127.0.0.1 3344                    # Warning -> Skipped
 Everything has a default value, so nothing needs to be set.
 
 To change something, set an environment variable:
-- `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT` for the warehouse service
+- `WAREHOUSE_ID`, `TEMPERATURE_PORT`, `HUMIDITY_PORT`, `LOCATION_PORT` for the warehouse service
 - `TEMPERATURE_THRESHOLD`, `HUMIDITY_THRESHOLD` for the central service
 - `MQTT_HOST`, `MQTT_PORT` for both
 
 For example, in another therminal on the same machine, a second warehouse can be created with following command:
 
 ```bash
-WAREHOUSE_ID=warehouse-2 TEMPERATURE_PORT=4344 HUMIDITY_PORT=4355 java -cp target/warehouse-monitoring.jar com.monitoring.warehouse.WarehouseApp
+WAREHOUSE_ID=warehouse-2 TEMPERATURE_PORT=4344 HUMIDITY_PORT=4355 LOCATION_PORT=4366 java -cp target/warehouse-monitoring.jar com.monitoring.warehouse.WarehouseApp
 ```
 
 ## How to Test

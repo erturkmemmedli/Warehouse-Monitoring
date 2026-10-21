@@ -29,6 +29,34 @@ class MeasurementTest {
     }
 
     @Test
+    void restoresLocationFromMqtt() {
+        Measurement original = new Measurement(
+            "w1",
+            SensorType.LOCATION,
+            "l1",
+            new Reading.Location(40.4093, 49.8671)
+        );
+        assertEquals("40.4093,49.8671", original.payload());
+        assertEquals(original, Measurement.fromMqtt(original.topic(), original.payload()));
+    }
+
+    @Test
+    void rejectsBadLocationPayload() {
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> Measurement.fromMqtt("warehouse/w1/location/l1", "40.4")
+        );
+    }
+
+    @Test
+    void rejectsReadingNotMatchingType() {
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> new Measurement("w1", SensorType.LOCATION, "l1", 30)
+        );
+    }
+
+    @Test
     void rejectsBadTopic() {
         assertThrows(
             IllegalArgumentException.class, 

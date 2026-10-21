@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.monitoring.common.Measurement;
+import com.monitoring.common.Reading;
 import com.monitoring.common.SensorType;
 
 class MeasurementParserTest {
@@ -42,6 +43,38 @@ class MeasurementParserTest {
             -2.5
         ));
         assertEquals(measurement, result);
+    }
+
+    @Test
+    void parsesLocationMessage() {
+        Optional<Measurement> result = MeasurementParser.parse(
+            "sensor_id=l1; latitude=40.4093; longitude=-49.8671",
+            "w1",
+            SensorType.LOCATION
+        );
+        Optional<Measurement> measurement = Optional.of(new Measurement(
+            "w1",
+            SensorType.LOCATION,
+            "l1",
+            new Reading.Location(40.4093, -49.8671)
+        ));
+        assertEquals(measurement, result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "sensor_id=l1; value=30",
+        "sensor_id=l1; latitude=40.4",
+        "sensor_id=l1; latitude=abc; longitude=49.8",
+        "sensor_id=l1; latitude=91; longitude=49.8",
+        "sensor_id=l1; latitude=40.4; longitude=181"
+    })
+    void rejectsMalformedLocationMessage(String raw) {
+        assertTrue(MeasurementParser.parse(
+            raw,
+            "w1",
+            SensorType.LOCATION
+        ).isEmpty());
     }
 
     @ParameterizedTest

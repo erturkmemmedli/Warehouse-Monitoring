@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.monitoring.common.Measurement;
+import com.monitoring.common.Reading;
 import com.monitoring.common.SensorType;
 
 public class ThresholdMonitor {
@@ -19,8 +20,12 @@ public class ThresholdMonitor {
     }
 
     public boolean check(Measurement measurement) {
+        if (!(measurement.reading() instanceof Reading.Scalar scalar)) {
+            log.info("OK {}", measurement);
+            return false;
+        }
         double threshold = thresholdMap.get(measurement.type());
-        if (measurement.value() <= threshold) {
+        if (scalar.value() <= threshold) {
             log.info("OK {}", measurement);
             return false;
         }
@@ -29,7 +34,7 @@ public class ThresholdMonitor {
             measurement.type(), 
             measurement.sensorId(), 
             measurement.warehouseId(),
-            measurement.value(), 
+            scalar.value(), 
             threshold
         );
         return true;

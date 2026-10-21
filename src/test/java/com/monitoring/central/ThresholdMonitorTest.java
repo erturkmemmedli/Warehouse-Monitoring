@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.monitoring.common.Measurement;
+import com.monitoring.common.Reading;
 import com.monitoring.common.SensorType;
 
 class ThresholdMonitorTest {
@@ -53,6 +54,16 @@ class ThresholdMonitorTest {
             SensorType.HUMIDITY, 
             "h1", 
             40
+        )));
+    }
+
+    @Test
+    void noAlarmForLocation() {
+        assertFalse(monitor.check(new Measurement(
+            "w1",
+            SensorType.LOCATION,
+            "l1",
+            new Reading.Location(40.4093, 49.8671)
         )));
     }
 }
